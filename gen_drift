@@ -1,0 +1,40 @@
+use Mojolicious::Lite;
+
+get '/' => sub {
+    shift->render('gen_drift');
+};
+
+app->start;
+
+__DATA__
+
+@@ gen_drift.html.ep
+%= form_for gen_drift => begin
+  <table>
+    <tr>
+      <td align=right>
+        Number of populations to simulate:
+      <td>
+        %= text_field 'pop'
+    <tr>
+      <td align=right>
+        Number of individuals in each population:
+      <td>
+        %= text_field 'size'
+    <tr>
+      <td align=right>
+        Number of generations:
+      <td>
+        %= text_field 'generations'
+    <tr>
+      <td align=right>
+        Starting allele frequency:
+      <td>
+        %= text_field 'freq'
+    <tr>
+      <td>
+      <td>
+        %= submit_button 'Simulate genetic drift'
+  </table>
+% end
+
