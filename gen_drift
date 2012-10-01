@@ -9,16 +9,26 @@ get '/' => sub {
 
 get '/gen_drift_results' => sub {
     my $self = shift;
-    $self->stash(
-        rplot   => "gen_drift.png",
-        results => "gen_drift.tsv",
-    );
+
+    my $pops        = $self->param('pops');
+    my $size        = $self->param('size');
+    my $generations = $self->param('generations');
+    my $frequency   = $self->param('frequency');
+    my $out = join "",
+      "p", $pops,
+      "s", $size,
+      "g", $generations,
+      "f", $frequency;
     my $gen_drift = gen_drift->new(
-        pops        => $self->param('pops'),
-        size        => $self->param('size'),
-        generations => $self->param('generations'),
-        frequency   => $self->param('frequency'),
-        out         => "public",
+        pops        => $pops,
+        size        => $size,
+        generations => $generations,
+        frequency   => $frequency,
+        out         => $out,
+    );
+    $self->stash(
+        rplot   => "$out/gen_drift.png",
+        results => "$out/gen_drift.tsv",
     );
     $gen_drift->simulate;
     $self->render('gen_drift_results');

@@ -12,7 +12,7 @@ DoSim <- function(pops, size, generations, freq, out, returnTable = FALSE, write
   #   size:        number of individuals in each population
   #   generations: number of generations
   #   freq:        starting allele frequency
-  #   out:         output directory
+  #   out:         prefix for output files
   #   returnTable:
   #
   # Returns:
@@ -26,7 +26,8 @@ DoSim <- function(pops, size, generations, freq, out, returnTable = FALSE, write
   colnames(results) <- paste("Pop_", 1:ncol(results), sep = "")
   rownames(results) <- paste("Gen_", 0:(nrow(results) - 1), sep = "")
   setwd("public")  # hard-coded for now, because not working any other way
-  png("gen_drift.png")
+  png_out <- paste( out, "gen_drift.png", sep = "/")
+  png(png_out)
   print(matplot(results,
                 type = "l",
                 lwd  = 2,
@@ -35,5 +36,6 @@ DoSim <- function(pops, size, generations, freq, out, returnTable = FALSE, write
                 ylim = c(0, 1)))
   dev.off()
   if (returnTable) results  # return results if requested
-  if (writeTable) write.table(results, file = "gen_drift.tsv", quote = F, sep='\t')
+  table_out <- paste( out, "gen_drift.tsv", sep = "/")
+  if (writeTable) write.table(results, file = table_out, quote = F, sep='\t')
 }
