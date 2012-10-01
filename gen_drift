@@ -11,7 +11,7 @@ get '/gen_drift_results' => sub {
     my $self = shift;
     $self->stash(
         rplot   => "gen_drift.png",
-        results => "gen_drift.csv",
+        results => "gen_drift.tsv",
     );
     my $gen_drift = gen_drift->new(
         pops        => $self->param('pops'),

@@ -23,6 +23,8 @@ DoSim <- function(pops, size, generations, freq, out, returnTable = FALSE, write
   for (g in 2:(generations + 1)) {  # loop through the generations
     results[g, ] <- rbinom(pops, size, prob = results[g - 1, ]) / size  # calculate the next generations frequencies
   }
+  colnames(results) <- paste("Pop_", 1:ncol(results), sep = "")
+  rownames(results) <- paste("Gen_", 0:(nrow(results) - 1), sep = "")
   setwd("public")  # hard-coded for now, because not working any other way
   png("gen_drift.png")
   print(matplot(results,
@@ -33,5 +35,5 @@ DoSim <- function(pops, size, generations, freq, out, returnTable = FALSE, write
                 ylim = c(0, 1)))
   dev.off()
   if (returnTable) results  # return results if requested
-  if (writeTable) write.csv(results, file = "gen_drift.csv")
+  if (writeTable) write.table(results, file = "gen_drift.tsv", quote = F, sep='\t')
 }
