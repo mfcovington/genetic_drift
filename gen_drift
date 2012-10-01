@@ -34,8 +34,6 @@ get '/gen_drift_results' => sub {
     $self->render('gen_drift_results');
 };
 
-
-
 app->start;
 
 __DATA__
