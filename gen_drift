@@ -1,21 +1,43 @@
 use Mojolicious::Lite;
+use gen_drift;
+
 
 get '/' => sub {
-    shift->render('gen_drift');
+    my $self = shift;
+    return $self->render('gen_drift');
 };
+
+get '/gen_drift_results' => sub {
+    my $self = shift;
+    $self->stash(
+        rplot   => "gen_drift.png",
+        results => "gen_drift.csv",
+    );
+    my $gen_drift = gen_drift->new(
+        pops        => $self->param('pops'),
+        size        => $self->param('size'),
+        generations => $self->param('generations'),
+        frequency   => $self->param('frequency'),
+        out         => "public",
+    );
+    $gen_drift->simulate;
+    $self->render('gen_drift_results');
+};
+
+
 
 app->start;
 
 __DATA__
 
 @@ gen_drift.html.ep
-%= form_for gen_drift => begin
+%= form_for gen_drift_results => begin
   <table>
     <tr>
       <td align=right>
         Number of populations to simulate:
       <td>
-        %= text_field 'pop'
+        %= text_field 'pops'
     <tr>
       <td align=right>
         Number of individuals in each population:
@@ -30,7 +52,7 @@ __DATA__
       <td align=right>
         Starting allele frequency:
       <td>
-        %= text_field 'freq'
+        %= text_field 'frequency'
     <tr>
       <td>
       <td>
@@ -38,3 +60,31 @@ __DATA__
   </table>
 % end
 
+@@ gen_drift_results.html.ep
+<table>
+<tr>
+  <td align=right>
+    Number of populations to simulate:
+  <td>
+    %= param('pops')
+<tr>
+  <td align=right>
+    Number of individuals in each population:
+  <td>
+    %= param('size')
+<tr>
+  <td align=right>
+    Number of generations:
+  <td>
+    %= param('generations')
+<tr>
+  <td align=right>
+    Starting allele frequency:
+  <td>
+    %= param('frequency')
+</table>
+<iframe src="<%= $rplot %>" style="width:480px; height:480px;" frameborder="0"></iframe><br>
+Results (right-click to save):
+  <a href="<%= $rplot %>">Figure</a>
+  <a href="<%= $results %>">Table</a><br><br>
+<a href="/"><%= submit_button 'RE-RUN SIMULATION' %></a><br>

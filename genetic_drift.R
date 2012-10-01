@@ -3,7 +3,7 @@
 # Julin Maloof 
 # Sept 27, 2012
 
-DoSim <- function(pops, size, generations, freq, returnTable = FALSE) {
+DoSim <- function(pops, size, generations, freq, out, returnTable = FALSE, writeTable = FALSE) {
   # Simulates genetic drift using binomial sampling at each generation
   # and updating allele frequencies at each genetation.
   #
@@ -12,6 +12,7 @@ DoSim <- function(pops, size, generations, freq, returnTable = FALSE) {
   #   size:        number of individuals in each population
   #   generations: number of generations
   #   freq:        starting allele frequency
+  #   out:         output directory
   #   returnTable:
   #
   # Returns:
@@ -22,18 +23,15 @@ DoSim <- function(pops, size, generations, freq, returnTable = FALSE) {
   for (g in 2:(generations + 1)) {  # loop through the generations
     results[g, ] <- rbinom(pops, size, prob = results[g - 1, ]) / size  # calculate the next generations frequencies
   }
+  setwd("public")  # hard-coded for now, because not working any other way
+  png("gen_drift.png")
   print(matplot(results,
                 type = "l",
                 lwd  = 2,
                 main = paste("n = ", size, ", generations = ", generations),
                 ylab = " frequency",
                 ylim = c(0, 1)))
+  dev.off()
   if (returnTable) results  # return results if requested
+  if (writeTable) write.csv(results, file = "gen_drift.csv")
 }
-
-pops <- 10
-size <- 5000
-generations <- 50
-frequency   <- 0.5
-
-DoSim(pops, size, generations, frequency)
