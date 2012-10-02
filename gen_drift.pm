@@ -15,6 +15,7 @@ sub simulate {
     my $frequency   = $self->frequency;
     my $out         = $self->out;
     $R->run( qq`DoSim(pops = $pops, size = $size, generations = $generations, freq = $frequency, out = "$out", writeTable = TRUE)` );
+    $R->stop();
 }
 
 sub _make_tmp_dir {
