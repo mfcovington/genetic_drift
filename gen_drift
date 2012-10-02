@@ -1,0 +1,101 @@
+use Mojolicious::Lite;
+use gen_drift;
+
+
+get '/' => sub {
+    my $self = shift;
+    return $self->render('gen_drift');
+};
+
+get '/gen_drift_results' => sub {
+    my $self = shift;
+
+    my $pops        = $self->param('pops');
+    my $size        = $self->param('size');
+    my $generations = $self->param('generations');
+    my $frequency   = $self->param('frequency');
+    my $out = join "",
+      "p", $pops,
+      "s", $size,
+      "g", $generations,
+      "f", $frequency;
+    my $gen_drift = gen_drift->new(
+        pops        => $pops,
+        size        => $size,
+        generations => $generations,
+        frequency   => $frequency,
+        out         => $out,
+    );
+    $self->stash(
+        rplot   => "$out/gen_drift.png",
+        results => "$out/gen_drift.tsv",
+    );
+    $gen_drift->simulate;
+    $self->render('gen_drift_results');
+};
+
+app->start;
+
+__DATA__
+
+@@ gen_drift.html.ep
+%= form_for gen_drift_results => begin
+  <table>
+    <tr>
+      <td align=right>
+        Number of populations to simulate:
+      <td>
+        %= text_field 'pops'
+    <tr>
+      <td align=right>
+        Number of individuals in each population:
+      <td>
+        %= text_field 'size'
+    <tr>
+      <td align=right>
+        Number of generations:
+      <td>
+        %= text_field 'generations'
+    <tr>
+      <td align=right>
+        Starting allele frequency:
+      <td>
+        %= text_field 'frequency'
+    <tr>
+      <td>
+      <td>
+        %= submit_button 'Simulate genetic drift'
+  </table>
+% end
+
+@@ gen_drift_results.html.ep
+<table>
+<tr>
+  <td align=right>
+    Number of populations to simulate:
+  <td>
+    %= param('pops')
+<tr>
+  <td align=right>
+    Number of individuals in each population:
+  <td>
+    %= param('size')
+<tr>
+  <td align=right>
+    Number of generations:
+  <td>
+    %= param('generations')
+<tr>
+  <td align=right>
+    Starting allele frequency:
+  <td>
+    %= param('frequency')
+</table>
+<iframe src="<%= $rplot %>" style="width:480px; height:480px;" frameborder="0"></iframe><br>
+Results (right-click to save):
+  <a href="<%= $rplot %>">Figure</a>
+  <a href="<%= $results %>">Table</a><br><br>
+<a href="/gen_drift_results?pops=<%= param('pops') %>&size=<%= param('size') %>&generations=<%= param('generations') %>&frequency=<%= param('frequency') %>">
+  <%= submit_button 'RE-RUN SIMULATION (SAME PARAMETERS)' %></a><br>
+<a href="/">
+  <%= submit_button 'RUN SIMULATION WITH NEW PARAMETERS' %></a><br>
