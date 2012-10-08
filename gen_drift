@@ -14,24 +14,46 @@ get '/gen_drift_results' => sub {
     my $size        = $self->param('size');
     my $generations = $self->param('generations');
     my $frequency   = $self->param('frequency');
-    my $out = join "",
-      "p", $pops,
-      "s", $size,
-      "g", $generations,
-      "f", $frequency;
-    my $gen_drift = gen_drift->new(
-        pops        => $pops,
-        size        => $size,
-        generations => $generations,
-        frequency   => $frequency,
-        out         => $out,
-    );
-    $self->stash(
-        rplot   => "$out/gen_drift.png",
-        results => "$out/gen_drift.tsv",
-    );
-    $gen_drift->simulate;
-    $self->render('gen_drift_results');
+    my $invalid = "Invalid parameter!";
+    $invalid .= " Number of populations must be between 1 and 500."
+      if $pops < 1
+      or $pops > 500;
+    $invalid .= " Number of generations must be between 1 and 500."
+      if $generations < 1
+      or $generations > 500;
+    $invalid .= " Starting allele frequency must be between 0 and 1."
+      if $frequency < 0
+      or $frequency > 1;
+    if (   $pops        < 1
+        or $pops        > 500
+        or $generations < 1
+        or $generations > 500
+        or $frequency   < 0
+        or $frequency   > 1 )
+    {
+        $self->flash( message => $invalid );
+        $self->redirect_to('/');
+    }
+    else{
+        my $out = join "",
+          "p", $pops,
+          "s", $size,
+          "g", $generations,
+          "f", $frequency;
+        my $gen_drift = gen_drift->new(
+            pops        => $pops,
+            size        => $size,
+            generations => $generations,
+            frequency   => $frequency,
+            out         => $out,
+        );
+        $self->stash(
+            rplot   => "$out/gen_drift.png",
+            results => "$out/gen_drift.tsv",
+        );
+        $gen_drift->simulate;
+        $self->render('gen_drift_results');
+    }
 };
 
 app->start;
@@ -39,6 +61,9 @@ app->start;
 __DATA__
 
 @@ gen_drift.html.ep
+% if (my $message = flash 'message') {
+  <b><%= $message %></b><br>
+% }
 %= form_for gen_drift_results => begin
   <table>
     <tr>
