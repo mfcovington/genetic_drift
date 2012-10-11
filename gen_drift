@@ -14,23 +14,34 @@ get '/gen_drift_results' => sub {
     my $size        = $self->param('size');
     my $generations = $self->param('generations');
     my $frequency   = $self->param('frequency');
-    my $invalid = "Invalid parameter!";
-    $invalid .= " Number of populations must be between 1 and 500."
-      if $pops < 1
-      or $pops > 500;
-    $invalid .= " Number of generations must be between 1 and 500."
-      if $generations < 1
-      or $generations > 500;
-    $invalid .= " Starting allele frequency must be between 0 and 1."
-      if $frequency < 0
-      or $frequency > 1;
     if (   $pops        < 1
-        or $pops        > 500
+        or $pops        > 100
+        or $size        < 1
+        or $size        > 10_000_000
         or $generations < 1
-        or $generations > 500
+        or $generations > 1_000
         or $frequency   < 0
-        or $frequency   > 1 )
+        or $frequency   > 1
+        or $pops        =~ m/[^0-9]/ 
+        or $size        =~ m/[^0-9]/ 
+        or $generations =~ m/[^0-9]/ )
     {
+        my $invalid = "Invalid parameter!";
+        $invalid .= " Number of populations must be an integer from 1 to 100."
+          if $pops < 1
+          or $pops > 100
+          or $pops =~ m/[^0-9]/;
+        $invalid .= " Number of individuals must be an integer from 1 to 10,000,000."
+          if $size < 1
+          or $size > 10_000_000
+          or $size =~ m/[^0-9]/;
+        $invalid .= " Number of generations must be an integer from 1 to 1,000."
+          if $generations < 1
+          or $generations > 1_000
+          or $generations =~ m/[^0-9]/;
+        $invalid .= " Starting allele frequency must be from 0 to 1."
+          if $frequency < 0
+          or $frequency > 1;
         $self->flash( message => $invalid );
         $self->redirect_to('/');
     }
@@ -68,22 +79,22 @@ __DATA__
   <table>
     <tr>
       <td align=right>
-        Number of populations to simulate:
+        Number of populations to simulate (1-100):
       <td>
         %= text_field 'pops'
     <tr>
       <td align=right>
-        Number of individuals in each population:
+        Number of individuals in each population (1-10,000,000):
       <td>
         %= text_field 'size'
     <tr>
       <td align=right>
-        Number of generations:
+        Number of generations (1-1,000):
       <td>
         %= text_field 'generations'
     <tr>
       <td align=right>
-        Starting allele frequency:
+        Starting allele frequency (0-1):
       <td>
         %= text_field 'frequency'
     <tr>

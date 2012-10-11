@@ -26,17 +26,17 @@ sub _make_tmp_dir {
 
 has pops => (
     is => 'rw',
-    isa => 'Int',
+    isa => 'Num',
 );
 
 has size => (
     is => 'rw',
-    isa => 'Int',
+    isa => 'Num',
 );
 
 has generations => (
     is => 'rw',
-    isa => 'Int',
+    isa => 'Num',
 );
 
 has frequency => (
