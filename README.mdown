@@ -1,0 +1,4 @@
+#Genetic Drift Simulator
+This web app will simulate genetic drift in allele frequency for a single polymorphism with two alleles.
+<br>Simulation is done under a Wright-Fisher model, using the binomial distribution.
+
