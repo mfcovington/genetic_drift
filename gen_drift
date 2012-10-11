@@ -134,7 +134,7 @@ Results (right-click to save):
   <a href="<%= $rplot %>">Figure</a>
   <a href="<%= $results %>">Table</a><br><br>
 <a href="/gen_drift_results?pops=<%= param('pops') %>&size=<%= param('size') %>&generations=<%= param('generations') %>&frequency=<%= param('frequency') %>">
-  <%= submit_button 'RE-RUN SIMULATION (SAME PARAMETERS)' %></a><br>
+  <%= submit_button 'RE-RUN SIMULATION (SAME PARAMETERS)' %></a>
 <a href="/">
   <%= submit_button 'RUN SIMULATION WITH NEW PARAMETERS' %></a><br>
 
