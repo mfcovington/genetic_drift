@@ -24,7 +24,8 @@ get '/gen_drift_results' => sub {
         or $frequency   > 1
         or $pops        =~ m/[^0-9]/ 
         or $size        =~ m/[^0-9]/ 
-        or $generations =~ m/[^0-9]/ )
+        or $generations =~ m/[^0-9]/ 
+        or $frequency   =~ m/[^0-9.]/ )
     {
         my $invalid = "Invalid parameter!";
         $invalid .= " Number of populations must be an integer from 1 to 100."
@@ -41,7 +42,8 @@ get '/gen_drift_results' => sub {
           or $generations =~ m/[^0-9]/;
         $invalid .= " Starting allele frequency must be from 0 to 1."
           if $frequency < 0
-          or $frequency > 1;
+          or $frequency > 1
+          or $frequency =~ m/[^0-9.]/;
         $self->flash( message => $invalid );
         $self->redirect_to('/');
     }
