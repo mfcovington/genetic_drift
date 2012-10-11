@@ -107,6 +107,7 @@ __DATA__
 
 @@ gen_drift_results.html.ep
 % layout 'default';
+<iframe src="<%= $rplot %>" style="width:480px; height:480px;" frameborder="0"></iframe><br>
 <table>
 <tr>
   <td align=right>
@@ -129,7 +130,6 @@ __DATA__
   <td>
     %= param('frequency')
 </table>
-<iframe src="<%= $rplot %>" style="width:480px; height:480px;" frameborder="0"></iframe><br>
 Results (right-click to save):
   <a href="<%= $rplot %>">Figure</a>
   <a href="<%= $results %>">Table</a><br><br>
