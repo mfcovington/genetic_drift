@@ -72,6 +72,7 @@ app->start;
 __DATA__
 
 @@ gen_drift.html.ep
+% layout 'default';
 % if (my $message = flash 'message') {
   <b><%= $message %></b><br>
 % }
@@ -105,6 +106,7 @@ __DATA__
 % end
 
 @@ gen_drift_results.html.ep
+% layout 'default';
 <table>
 <tr>
   <td align=right>
@@ -135,3 +137,13 @@ Results (right-click to save):
   <%= submit_button 'RE-RUN SIMULATION (SAME PARAMETERS)' %></a><br>
 <a href="/">
   <%= submit_button 'RUN SIMULATION WITH NEW PARAMETERS' %></a><br>
+
+@@ layouts/default.html.ep
+<!DOCTYPE html>
+<html>
+  <head><title>Genetic Drift Simulator</title></head>
+  <h2>Genetic Drift Simulator</h2>
+  <h3>This website will simulate genetic drift in allele frequency for a single polymorphism with two alleles.
+  <br>Simulation is done under a Wright-Fisher model, using the binomial distribution.</h3>
+  <body><%= content %></body>
+</html>
