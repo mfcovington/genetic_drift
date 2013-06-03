@@ -14,7 +14,12 @@ sub simulate {
     my $generations = $self->generations;
     my $frequency   = $self->frequency;
     my $out         = $self->out;
-    $R->run( qq`DoSim(pops = $pops, size = $size, generations = $generations, freq = $frequency, out = "$out", writeTable = TRUE)` );
+    $R->run( qq`DoSim(pops        = $pops,
+                      size        = $size,
+                      generations = $generations,
+                      freq        = $frequency,
+                      out         = "$out",
+                      writeTable  = TRUE)` );
     $R->stop();
 }
 
